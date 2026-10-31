@@ -1,0 +1,15 @@
+test_ac008_ac022_annotation_governance (__main__.AnnotationCliTests) ... ok
+test_ac004_ac005_record_verify_and_independent_check (__main__.RecordingTests) ... ok
+test_ac006_effective_settings_come_from_the_source (__main__.RecordingTests) ... ok
+test_ac007_replay_reproducibility (__main__.RecordingTests) ... ok
+test_ac009_ac012_report_bundle_conforms_and_is_traceable (__main__.RecordingTests) ... ok
+test_ac024_concurrent_sessions_have_unique_ids (__main__.RecordingTests) ... ok
+test_fr010_still_export_and_unknown_frame (__main__.RecordingTests) ... ok
+test_fr018_segment_rollover_links_sessions (__main__.RecordingTests) ... ok
+test_nfr013_structured_log_schema (__main__.RecordingTests) ... ok
+test_recording_disabled_creates_no_session (__main__.RecordingTests) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.438s
+
+OK

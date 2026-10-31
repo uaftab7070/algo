@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ahpv/qa-report/1.0",
+  "title": "Offline QA report (qa-report.json)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "usage_notice",
+    "report_id",
+    "generated_at",
+    "generator",
+    "session_id",
+    "run_id",
+    "segment_index",
+    "session_status",
+    "provenance",
+    "provenance_complete",
+    "environment",
+    "deterministic",
+    "nondeterministic"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "usage_notice": {
+      "const": "NOT FOR FLIGHT OR ENGAGEMENT CONTROL"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^r-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "build_id",
+        "executable_sha256"
+      ]
+    },
+    "session_id": {
+      "type": "string",
+      "pattern": "^s-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$"
+    },
+    "run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "segment_index": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "session_status": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "provenance_complete": {
+      "type": "boolean"
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "recording_platform",
+        "recording_software",
+        "report_platform",
+        "configuration_sha256",
+        "source",
+        "fault_injection",
+        "input_manifest_sha256",
+        "video_sha256"
+      ]
+    },
+    "deterministic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frames",
+        "flag_counts",
+        "event_counts",
+        "source_interval",
+        "timestamp_basis",
+        "quality",
+        "unusable_segments",
+        "upstream_gaps",
+        "unusable_frame_ids",
+        "usable_fraction",
+        "quality_rules",
+        "annotations",
+        "integrity"
+      ],
+      "properties": {
+        "frames": {
+          "type": "object",
+          "required": [
+            "stored",
+            "dropped_queue",
+            "rejected",
+            "missing_upstream",
+            "first_frame_id",
+            "last_frame_id",
+            "accounted_ids"
+          ]
+        },
+        "flag_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "event_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "source_interval": {
+          "$ref": "#/$defs/distribution"
+        },
+        "unusable_segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "first_frame_id",
+              "last_frame_id",
+              "frames",
+              "reasons"
+            ]
+          }
+        },
+        "usable_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "annotations": {
+          "type": "object",
+          "required": [
+            "active_annotations",
+            "by_review_status",
+            "frames_annotated",
+            "reviewed",
+            "independently_reviewed",
+            "annotators",
+            "reviewers",
+            "log_chain_ok"
+          ]
+        },
+        "integrity": {
+          "type": "object",
+          "required": [
+            "verify_ok",
+            "failed_checks"
+          ]
+        },
+        "timestamp_basis": {
+          "type": "string"
+        },
+        "quality": {
+          "type": "object",
+          "required": [
+            "luma_mean",
+            "luma_std"
+          ]
+        },
+        "upstream_gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "before_frame_id",
+              "missing_source_frames"
+            ]
+          }
+        },
+        "unusable_frame_ids": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quality_rules": {
+          "type": "string"
+        }
+      }
+    },
+    "nondeterministic": {
+      "type": "object",
+      "required": [
+        "acquisition_interval",
+        "processing_time",
+        "resources"
+      ],
+      "properties": {
+        "acquisition_interval": {
+          "$ref": "#/$defs/distribution"
+        },
+        "processing_time": {
+          "$ref": "#/$defs/distribution"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "distribution": {
+      "type": "object",
+      "required": [
+        "count",
+        "min_ms",
+        "mean_ms",
+        "p50_ms",
+        "p95_ms",
+        "p99_ms",
+        "max_ms",
+        "resolution"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

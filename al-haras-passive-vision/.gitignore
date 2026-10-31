@@ -1,0 +1,8 @@
+build/
+data/
+evidence/*/samples/session/*.y4m
+tests/fixtures/generated/
+releases/*.tar.gz
+releases/*.sha256
+*.token
+__pycache__/

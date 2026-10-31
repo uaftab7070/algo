@@ -1,0 +1,474 @@
+
+===== collected =====
+2021-01-01T12:01:26Z
+collector: al-haras-passive-vision scripts/inventory.sh
+
+===== uname =====
+Linux luckfox 5.10.160 #22 Wed Jun 11 18:43:57 CST 2025 armv7l GNU/Linux
+
+===== /etc/os-release =====
+NAME=Buildroot
+VERSION=-g2ae728b52-dirty
+ID=buildroot
+VERSION_ID=2023.02.6
+PRETTY_NAME="Buildroot 2023.02.6"
+
+
+===== /proc/device-tree/model =====
+Luckfox Pico Pro Max 
+
+===== /proc/device-tree/compatible =====
+rockchip,rv1103g-38x38-ipc-v10 rockchip,rv1106g3 
+
+===== /proc/device-tree/serial-number =====
+f27110228fd4e70f 
+
+===== /proc/cpuinfo =====
+processor	: 0
+model name	: ARMv7 Processor rev 5 (v7l)
+BogoMIPS	: 48.00
+Features	: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xc07
+CPU revision	: 5
+
+Hardware	: Generic DT based system
+Revision	: 0000
+Serial		: f27110228fd4e70f
+
+
+===== /proc/meminfo =====
+MemTotal:         185564 kB
+MemFree:          147352 kB
+MemAvailable:     157864 kB
+Buffers:            1920 kB
+Cached:            11460 kB
+SwapCached:            0 kB
+Active:             5524 kB
+Inactive:          15624 kB
+Active(anon):        232 kB
+Inactive(anon):     7904 kB
+Active(file):       5292 kB
+Inactive(file):     7720 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:                 0 kB
+Writeback:             0 kB
+AnonPages:          7788 kB
+Mapped:             5500 kB
+Shmem:               368 kB
+KReclaimable:       4372 kB
+Slab:              10088 kB
+SReclaimable:       4372 kB
+SUnreclaim:         5716 kB
+KernelStack:         856 kB
+PageTables:          380 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:       92780 kB
+Committed_AS:      75412 kB
+VmallocTotal:    1032192 kB
+VmallocUsed:        3844 kB
+VmallocChunk:          0 kB
+Percpu:               32 kB
+CmaTotal:          67584 kB
+CmaAllocated:      50656 kB
+CmaReleased:       16928 kB
+CmaFree:               0 kB
+
+
+===== /proc/cmdline =====
+user_debug=31 storagemedia=mtd androidboot.storagemedia=mtd androidboot.mode=normal  rootwait earlycon=uart8250,mmio32,0xff4c0000 console=ttyFIQ0 root=ubi0:rootfs snd_soc_core.prealloc_buffer_size_kbytes=16 coherent_pool=0 mtdparts=spi-nand0:256K(env),256K@256K(idblock),512K(uboot),4M(boot),30M(oem),10M(userdata),210M(rootfs) ubi.mtd=6 rootfstype=ubifs rk_dma_heap_cma=66M androidboot.fwver=uboot-06/26/2025
+
+
+===== /proc/mtd =====
+dev:    size   erasesize  name
+mtd0: 00040000 00020000 "env"
+mtd1: 00040000 00020000 "idblock"
+mtd2: 00080000 00020000 "uboot"
+mtd3: 00400000 00020000 "boot"
+mtd4: 01e00000 00020000 "oem"
+mtd5: 00a00000 00020000 "userdata"
+mtd6: 0d200000 00020000 "rootfs"
+
+
+===== /proc/partitions =====
+major minor  #blocks  name
+
+   1        0       4096 ram0
+   1        1       4096 ram1
+   1        2       4096 ram2
+   1        3       4096 ram3
+   1        4       4096 ram4
+   1        5       4096 ram5
+   1        6       4096 ram6
+   1        7       4096 ram7
+   1        8       4096 ram8
+   1        9       4096 ram9
+   1       10       4096 ram10
+   1       11       4096 ram11
+   1       12       4096 ram12
+   1       13       4096 ram13
+   1       14       4096 ram14
+   1       15       4096 ram15
+  31        0        256 mtdblock0
+  31        1        256 mtdblock1
+  31        2        512 mtdblock2
+  31        3       4096 mtdblock3
+  31        4      30720 mtdblock4
+  31        5      10240 mtdblock5
+  31        6     215040 mtdblock6
+ 179        0   15360000 mmcblk1
+ 179        1   15359984 mmcblk1p1
+
+
+===== /proc/mounts =====
+ubi0:rootfs / ubifs rw,relatime,assert=read-only,ubi=0,vol=0 0 0
+devtmpfs /dev devtmpfs rw,relatime,size=92680k,nr_inodes=23170,mode=755 0 0
+proc /proc proc rw,relatime 0 0
+devpts /dev/pts devpts rw,relatime,gid=5,mode=620,ptmxmode=666 0 0
+tmpfs /dev/shm tmpfs rw,relatime,mode=777 0 0
+tmpfs /tmp tmpfs rw,relatime 0 0
+tmpfs /run tmpfs rw,nosuid,nodev,relatime,mode=755 0 0
+sysfs /sys sysfs rw,relatime 0 0
+/dev/mmcblk1p1 /mnt/sdcard vfat rw,noatime,uid=1000,gid=1000,fmask=0133,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 0
+/dev/ubi4_0 /oem ubifs rw,relatime,assert=read-only,ubi=4,vol=0 0 0
+/dev/ubi5_0 /userdata ubifs rw,relatime,assert=read-only,ubi=5,vol=0 0 0
+none /sys/kernel/config configfs rw,relatime 0 0
+adb /dev/usb-ffs/adb functionfs rw,relatime 0 0
+
+
+===== df =====
+Filesystem           1K-blocks      Used Available Use% Mounted on
+ubi0:rootfs             185676     44848    140828  24% /
+devtmpfs                 92680         0     92680   0% /dev
+tmpfs                    92780         0     92780   0% /dev/shm
+tmpfs                    92780       172     92608   0% /tmp
+tmpfs                    92780       196     92584   0% /run
+/dev/mmcblk1p1        15356192        32  15356160   0% /mnt/sdcard
+/dev/ubi4_0              20640     16816      3824  81% /oem
+/dev/ubi5_0               2292        48      2244   2% /userdata
+
+===== video4linux =====
+v4l-subdev0: rockchip-mipi-csi2
+v4l-subdev1: rockchip-csi2-dphy0
+v4l-subdev2: m00_b_mis5001 4-0031
+v4l-subdev3: rkisp-isp-subdev
+v4l-subdev4: rkcif-mipi-lvds
+video0: stream_cif_mipi_id0
+video1: stream_cif_mipi_id1
+video10: rkcif_tools_id2
+video11: rkisp_mainpath
+video12: rkisp_selfpath
+video13: rkisp_bypasspath
+video14: rkisp_mainpath_4x4sampling
+video15: rkisp_bypasspath_4x4sampling
+video16: rkisp_lumapath
+video17: rkisp_rawrd0_m
+video18: rkisp_rawrd2_s
+video19: rkisp-statistics
+video2: stream_cif_mipi_id2
+video20: rkisp-input-params
+video3: stream_cif_mipi_id3
+video4: rkcif_scale_ch0
+video5: rkcif_scale_ch1
+video6: rkcif_scale_ch2
+video7: rkcif_scale_ch3
+video8: rkcif_tools_id0
+video9: rkcif_tools_id1
+
+===== media/video/npu/rga nodes =====
+crw-rw----    1 root     video     250,   0 Jan  1 12:00 [1;35m/dev/media0[m
+crw-rw----    1 root     video     250,   1 Jan  1 12:00 [1;35m/dev/media1[m
+crw-------    1 root     root      243,   0 Jan  1 12:00 [1;35m/dev/mpp_service[m
+crw-------    1 root     root       10, 124 Jan  1 12:00 [1;35m/dev/rga[m
+crw-------    1 root     root       10, 123 Jan  1 12:00 [1;35m/dev/rknpu[m
+crw-rw----    1 root     video      81,  21 Jan  1 12:00 [1;35m/dev/v4l-subdev0[m
+crw-rw----    1 root     video      81,  22 Jan  1 12:00 [1;35m/dev/v4l-subdev1[m
+crw-rw----    1 root     video      81,  23 Jan  1 12:00 [1;35m/dev/v4l-subdev2[m
+crw-rw----    1 root     video      81,  24 Jan  1 12:00 [1;35m/dev/v4l-subdev3[m
+crw-rw----    1 root     video      81,  25 Jan  1 12:00 [1;35m/dev/v4l-subdev4[m
+crw-rw----    1 root     video      81,   0 Jan  1 12:00 [1;35m/dev/video0[m
+crw-rw----    1 root     video      81,   1 Jan  1 12:00 [1;35m/dev/video1[m
+crw-rw----    1 root     video      81,  10 Jan  1 12:00 [1;35m/dev/video10[m
+crw-rw----    1 root     video      81,  11 Jan  1 12:00 [1;35m/dev/video11[m
+crw-rw----    1 root     video      81,  12 Jan  1 12:00 [1;35m/dev/video12[m
+crw-rw----    1 root     video      81,  13 Jan  1 12:00 [1;35m/dev/video13[m
+crw-rw----    1 root     video      81,  14 Jan  1 12:00 [1;35m/dev/video14[m
+crw-rw----    1 root     video      81,  15 Jan  1 12:00 [1;35m/dev/video15[m
+crw-rw----    1 root     video      81,  16 Jan  1 12:00 [1;35m/dev/video16[m
+crw-rw----    1 root     video      81,  17 Jan  1 12:00 [1;35m/dev/video17[m
+crw-rw----    1 root     video      81,  18 Jan  1 12:00 [1;35m/dev/video18[m
+crw-rw----    1 root     video      81,  19 Jan  1 12:00 [1;35m/dev/video19[m
+crw-rw----    1 root     video      81,   2 Jan  1 12:00 [1;35m/dev/video2[m
+crw-rw----    1 root     video      81,  20 Jan  1 12:00 [1;35m/dev/video20[m
+crw-rw----    1 root     video      81,   3 Jan  1 12:00 [1;35m/dev/video3[m
+crw-rw----    1 root     video      81,   4 Jan  1 12:00 [1;35m/dev/video4[m
+crw-rw----    1 root     video      81,   5 Jan  1 12:00 [1;35m/dev/video5[m
+crw-rw----    1 root     video      81,   6 Jan  1 12:00 [1;35m/dev/video6[m
+crw-rw----    1 root     video      81,   7 Jan  1 12:00 [1;35m/dev/video7[m
+crw-rw----    1 root     video      81,   8 Jan  1 12:00 [1;35m/dev/video8[m
+crw-rw----    1 root     video      81,   9 Jan  1 12:00 [1;35m/dev/video9[m
+
+===== camera sensor drivers (dmesg) =====
+[    2.509982] sc3336 4-0030: Unexpected sensor id(000000), ret(-5)
+[    2.523075] mis5001 4-0031: driver version: 00.01.02
+[    2.523180] mis5001 4-0031: Failed to get pwdn-gpios
+[    2.523193] mis5001 4-0031: could not get default pinstate
+[    2.523202] mis5001 4-0031: could not get sleep pinstate
+[    2.523224] mis5001 4-0031: supply avdd not found, using dummy regulator
+[    2.523475] mis5001 4-0031: supply dovdd not found, using dummy regulator
+[    2.523538] mis5001 4-0031: supply dvdd not found, using dummy regulator
+[    2.534188] mis5001 4-0031: Detected mis4001 1311 sensor
+[    2.581979] rkcifhw ffa10000.rkcif: no iommu attached, using non-iommu buffers
+[    2.582003] rkcifhw ffa10000.rkcif: No reserved memory region assign to CIF
+[    2.582387] rkcif rkcif-mipi-lvds: rkcif driver version: v00.02.00
+[    2.582495] rkcif rkcif-mipi-lvds: attach to cif hw node
+[    2.582508] rkcif rkcif-mipi-lvds: failed to get dphy hw node
+[    2.582517] rkcif rkcif-mipi-lvds: rkcif wait line 0
+[    2.582528] rkcif rkcif-mipi-lvds: rkcif fastboot reserve bufs num 3
+[    2.582590] : rkcif_update_sensor_info: stream[0] get remote sensor_sd failed!
+[    2.582601] : rkcif_scale_set_fmt: req(80, 60) src out(0, 0)
+[    2.582615] : rkcif_update_sensor_info: stream[0] get remote sensor_sd failed!
+[    2.582625] : rkcif_scale_set_fmt: req(80, 60) src out(0, 0)
+[    2.582640] : rkcif_update_sensor_info: stream[0] get remote sensor_sd failed!
+[    2.582649] : rkcif_scale_set_fmt: req(80, 60) src out(0, 0)
+[    2.582664] : rkcif_update_sensor_info: stream[0] get remote sensor_sd failed!
+[    2.582672] : rkcif_scale_set_fmt: req(80, 60) src out(0, 0)
+[    2.595051] rkcif rkcif-mipi-lvds: No memory-region-thunderboot specified
+[    2.596200] rockchip-mipi-csi2-hw ffa20000.mipi-csi2-hw: enter mipi csi2 hw probe!
+[    2.596360] rockchip-mipi-csi2-hw ffa20000.mipi-csi2-hw: probe success, v4l2_dev:mipi-csi2-hw!
+[    2.596493] rockchip-mipi-csi2-hw ffa30000.mipi-csi2-hw: enter mipi csi2 hw probe!
+[    2.596610] rockchip-mipi-csi2-hw ffa30000.mipi-csi2-hw: probe success, v4l2_dev:mipi-csi2-hw!
+[    2.596979] rockchip-mipi-csi2 mipi0-csi2: attach to csi2 hw node
+[    2.597046] rkcif rkcif-mipi-lvds: Entity type for entity rockchip-mipi-csi2 was not initialized!
+[    2.597064] rockchip-mipi-csi2: Async registered subdev
+[    2.597077] rockchip-mipi-csi2: probe success, v4l2_dev:rkcif-mipi-lvds!
+[    2.655399] rkisp_hw ffa00000.rkisp: is_thunderboot: 0
+[    2.655425] rkisp_hw ffa00000.rkisp: Missing rockchip,grf property
+[    2.655468] rkisp_hw ffa00000.rkisp: max input:0x0@0fps
+[    2.655635] rkisp_hw ffa00000.rkisp: get sram size:253952
+[    2.655651] rkisp_hw ffa00000.rkisp: no iommu attached, using non-iommu buffers
+[    2.655662] rkisp_hw ffa00000.rkisp: No reserved memory region. default cma area!
+[    2.656032] rkisp rkisp-vir0: rkisp driver version: v02.05.00
+[    2.656157] rkisp rkisp-vir0: No memory-region-thunderboot specified
+[    2.657289] rkisp rkisp-vir0: Entity type for entity rkisp-isp-subdev was not initialized!
+[    2.683612] rockchip-csi2-dphy-hw ff3e8000.csi2-dphy-hw: csi2 dphy hw probe successfully!
+[    2.698589] rockchip-csi2-dphy csi2-dphy0: dphy0 matches m00_b_mis5001 4-0031:bus type 5
+[    2.698615] rockchip-csi2-dphy csi2-dphy0: csi2 dphy0 probe successfully!
+[    2.961533] rkcif rkcif-mipi-lvds: clear unready subdev num: 1
+[    2.963089] rkcif-mipi-lvds: Async subdev notifier completed
+[    2.964699] rkisp-vir0: Async subdev notifier completed
+[    2.965412] rkisp rkisp-vir0: clear unready subdev num: 0
+[    7.469725] stream_cif_mipi_id0: s_power 1, entity use_count 1
+[    7.470311] stream_cif_mipi_id0: s_power 0, entity use_count 0
+[    8.007155] stream_cif_mipi_id0: s_power 1, entity use_count 1
+[    8.008578] stream_cif_mipi_id0: open video, entity use_countt 2
+[    8.008694] stream_cif_mipi_id1: open video, entity use_countt 1
+[    8.032513] rkisp rkisp-vir0: first params buf queue
+[    8.162648] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.162737] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.166214] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.167100] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.176527] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.176605] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.192103] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.192183] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.196003] rkisp queue buf done
+[    8.196764] rkisp_hw ffa00000.rkisp: set isp clk = 339428572Hz
+[    8.198614] rkcif-mipi-lvds: stream[0] start streaming
+[    8.198738] rockchip-mipi-csi2 mipi0-csi2: stream on, src_sd: a2f4fadb, sd_name:rockchip-csi2-dphy0
+[    8.198752] rockchip-mipi-csi2 mipi0-csi2: stream ON
+[    8.198802] rockchip-csi2-dphy0: dphy0, data_rate_mbps 891
+[    8.198838] rockchip-csi2-dphy csi2-dphy0: csi2_dphy_s_stream stream on:1, dphy0, ret 0
+[    8.297237] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.297734] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.309594] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.309716] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.311588] rkisp queue buf done
+[    8.346527] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.370599] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.377977] stream_cif_mipi_id0: open video, entity use_countt 3
+[    8.378085] stream_cif_mipi_id0: close video, entity use_count 2
+[    8.379853] rkisp queue buf done
+
+===== kernel modules =====
+rve 23436 0 - Live 0xaf98c000
+rockit 225880 22 - Live 0xaf942000 (O)
+rknpu 27019 0 - Live 0xaf935000
+mpp_vcodec 414257 4 rockit, Live 0xaf8ad000 (O)
+rga3 90762 1 rockit, Live 0xaf88e000
+phy_rockchip_csi2_dphy 9338 0 - Live 0xaf887000
+phy_rockchip_csi2_dphy_hw 10066 0 - Live 0xaf880000
+video_rkisp 171838 3 rockit, Live 0xaf849000
+video_rkcif 162117 4 rockit, Live 0xaf814000
+mis5001 9153 2 - Live 0xaf80d000
+rk_dvbm 5941 2 mpp_vcodec,video_rkisp, Live 0xaf800000
+
+===== vendor libraries (names only; not ABI verification) =====
+-rw-rw-r--    1 1005     1005        166604 Jun 26  2025 librga.so
+-rw-rw-r--    1 1005     1005       1683192 Jun 26  2025 librkaiq.so
+-rw-r--r--    1 1005     1005        190368 Jun 26  2025 librknnmrt.so
+lrwxrwxrwx    1 1005     1005            20 May 20  2025 librockchip_mpp.so -> librockchip_mpp.so.1
+-rw-rw-r--    1 1005     1005        185468 Jun 26  2025 librockchip_mpp.so.0
+lrwxrwxrwx    1 1005     1005            20 May 20  2025 librockchip_mpp.so.1 -> librockchip_mpp.so.0
+-rw-r--r--    1 1005     1005       1164784 Jun 26  2025 librockit.so
+-rw-r--r--    1 1005     1005       2190644 Jun 26  2025 librockit_full.so
+-rw-r--r--    1 1005     1005        605876 Jun 26  2025 librockit_tiny.so
+
+===== processes =====
+PID   USER     COMMAND
+    1 root     init
+    2 root     [kthreadd]
+    3 root     [kworker/0:0-eve]
+    4 root     [kworker/0:0H-kb]
+    5 root     [kworker/u2:0-ev]
+    6 root     [mm_percpu_wq]
+    7 root     [ksoftirqd/0]
+    8 root     [kdevtmpfs]
+    9 root     [oom_reaper]
+   10 root     [writeback]
+   11 root     [kcompactd0]
+   12 root     [ksmd]
+   28 root     [kblockd]
+   29 root     [kconsole]
+   30 root     [devfreq_wq]
+   31 root     [watchdogd]
+   32 root     [rpciod]
+   33 root     [kworker/0:1-eve]
+   34 root     [kworker/u3:0]
+   35 root     [xprtiod]
+   36 root     [irq/24-rockchip]
+   37 root     [kswapd0]
+   38 root     [nfsiod]
+   39 root     [irq/61-rockchip]
+   40 root     [irq/62-rockchip]
+   41 root     [irq/63-rockchip]
+   42 root     [hwrng]
+   43 root     [kworker/u2:1-ev]
+   51 root     [stmmac_wq]
+   53 root     [irq/22-RTC alar]
+   54 root     [kworker/0:2-eve]
+   55 root     [kworker/0:3-eve]
+   56 root     [kworker/u2:2-ev]
+   57 root     [mmc_complete]
+   58 root     [kworker/0:1H-kb]
+   59 root     [ubi_bgt0d]
+   62 root     [ubifs_bgt0_0]
+   78 root     /sbin/syslogd -n
+   82 root     /sbin/klogd -n
+   93 root     /sbin/udevd -d
+  138 root     [ubi_bgt4d]
+  143 root     [ubifs_bgt4_0]
+  152 root     [ubi_bgt5d]
+  157 root     [ubifs_bgt5_0]
+  179 root     [irq/48-ffa70000]
+  228 root     /usr/sbin/ntpd -g -p /var/run/ntpd.pid
+  244 root     [irq/37-rga2]
+  249 root     [queue_work0]
+  250 root     [queue_work1]
+  251 root     [irq/47-ffa60000]
+  252 root     [vcodec_thread_0]
+  254 root     [rknpu_power_off]
+  260 root     [vlog]
+  261 root     [valloc]
+  262 root     [vsys]
+  263 root     [vrga_0]
+  264 root     [vrga_1]
+  265 root     [venc]
+  266 root     [rkisp-vir0]
+  267 root     [vpss]
+  268 root     [vrgn]
+  269 root     [vmcu]
+  271 root     [irq/53-rve]
+  274 root     sh /oem/usr/bin/RkLunch.sh
+  320 root     sshd: /usr/sbin/sshd [listener] 0 of 10-100 startups
+  330 root     udhcpc -i eth0
+  346 root     /usr/sbin/telnetd -F
+  405 root     /usr/bin/adbd
+  417 root     [irq/64-dwc3]
+  664 root     rkipc -a /oem/usr/share/iqfiles
+  812 root     {S99usb0config} /bin/sh /etc/init.d/S99usb0config start
+  813 root     /sbin/getty -L console 0 vt100
+  897 root     sh /tmp/ahpv-inventory.sh
+  957 root     ps
+
+===== listening sockets =====
+tcp        0      0 0.0.0.0:5555            0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:3893          0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN      
+tcp        0      0 0.0.0.0:554             0.0.0.0:*               LISTEN      
+tcp        0      0 127.0.0.1:5037          0.0.0.0:*               LISTEN      
+unix  2      [ ACC ]     SEQPACKET  LISTENING       5045 /run/udev/control
+unix  2      [ ACC ]     STREAM     LISTENING       6922 /tmp/UNIX.domain0
+unix  2      [ ACC ]     STREAM     LISTENING       6982 /var/tmp/rkipc
+unix  2      [ ACC ]     STREAM     LISTENING       6164 @jdwp-control
+
+===== /proc/net/tcp =====
+  sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode                                                     
+   0: 00000000:15B3 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 6169 1 10892e73 100 0 0 10 0                              
+   1: 0100007F:0F35 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 6945 1 9e5bd469 100 0 0 10 0                              
+   2: 00000000:0016 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 5708 1 bf975998 100 0 0 10 0                              
+   3: 00000000:0017 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 5785 1 f7105068 100 0 0 10 0                              
+   4: 00000000:022A 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 6948 1 b62b1787 100 0 0 10 0                              
+   5: 0100007F:13AD 00000000:0000 0A 00000000:00000000 00:00000000 00000000     0        0 6161 1 0d725503 100 0 0 10 0                              
+
+
+===== /proc/net/udp =====
+   sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode ref pointer drops            
+  205: 5D0020AC:007B 00000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 7024 2 4403e1fb 0                  
+  205: 0100007F:007B 00000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 5511 2 8246eb81 0                  
+  205: 00000000:007B 00000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 5503 2 2460a671 0                  
+
+
+===== network interfaces =====
+[1;36meth0[m  [1;36mlo[m    [1;36musb0[m
+
+===== serial device names (not opened) =====
+[1;35m/dev/ttyFIQ0[m
+
+===== usb devices =====
+
+===== thermal =====
+thermal_zone0 soc-thermal 57673
+
+===== cma =====
+CmaTotal:          67584 kB
+CmaAllocated:      50656 kB
+CmaReleased:       16928 kB
+CmaFree:               0 kB
+[    2.655662] rkisp_hw ffa00000.rkisp: No reserved memory region. default cma area!
+
+===== init scripts =====
+total 108
+-rwxr-xr-x    1 1005     1005          1243 Jun 26  2025 [1;32mS01seedrng[m
+-rwxr-xr-x    1 1005     1005          1012 Jun 26  2025 [1;32mS01syslogd[m
+-rwxr-xr-x    1 1005     1005          1004 Jun 26  2025 [1;32mS02klogd[m
+-rwxr-xr-x    1 1005     1005          2804 Jun 26  2025 [1;32mS02sysctl[m
+-rwxrwxr-x    1 1005     1005          1594 Jun 26  2025 [1;32mS10udev[m
+-rwxrwxr-x    1 1005     1005          5043 Jun 26  2025 [1;32mS20linkmount[m
+-rwxr-xr-x    1 1005     1005          1272 Sep 28  2021 [1;32mS20urandom[m
+-rwxrwxr-x    1 1005     1005           197 Jun 26  2025 [1;32mS21appinit[m
+-rwxr-xr-x    1 1005     1005           438 Jun 26  2025 [1;32mS40network[m
+-rwxr-xr-x    1 1005     1005           918 Jun 26  2025 [1;32mS49ntp[m
+-rwxr-xr-x    1 1005     1005           561 May 20  2025 [1;32mS50sshd[m
+-rwxr-xr-x    1 1005     1005           614 Jun 26  2025 [1;32mS50telnet[m
+-rwxrwxr-x    1 1005     1005         10727 May 20  2025 [1;32mS50usbdevice[m
+-rwxr-xr-x    1 1005     1005           707 Jun 11  2025 [1;32mS60micinit[m
+-rwxrwxr-x    1 1005     1005           742 May 20  2025 [1;32mS99_auto_reboot[m
+-rwxr-xr-x    1 1005     1005           493 May 20  2025 [1;32mS99hciinit[m
+-rwxr-xr-x    1 1005     1005           166 Jun 11  2025 [1;32mS99luckfoxconfigload[m
+-rwxr-xr-x    1 1005     1005          5828 Jun 11  2025 [1;32mS99luckfoxcustomoverlay[m
+-rwxr-xr-x    1 1005     1005           777 May 20  2025 [1;32mS99python[m
+-rwxr-xr-x    1 1005     1005           215 May 20  2025 [1;32mS99rtcinit[m
+-rwxr-xr-x    1 1005     1005          1467 May 20  2025 [1;32mS99usb0config[m
+-rwxr-xr-x    1 1005     1005           423 Jun 26  2025 [1;32mrcK[m
+-rwxr-xr-x    1 1005     1005           408 Jun 26  2025 [1;32mrcS[m
+
+===== end =====

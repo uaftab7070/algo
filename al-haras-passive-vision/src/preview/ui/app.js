@@ -1,0 +1,420 @@
+'use strict';
+// Read-only preview and manual annotation client. All server text is inserted
+// with textContent; nothing received from the server is executed or followed.
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    token: '', who: null, mode: 'live',
+    liveTimer: null, statusTimer: null, liveBusy: false,
+    session: null, geometry: null, frames: [], index: 0, playTimer: null,
+    annotations: [], selected: null, drag: null, pending: null, scale: 1, k: 1, bitmap: null,
+  };
+  try { state.token = sessionStorage.getItem('ahpv_token') || ''; } catch (e) { /* storage unavailable */ }
+
+  function message(text) { $('message').textContent = text || ''; }
+
+  async function api(path, options = {}) {
+    const headers = Object.assign({}, options.headers || {}, { Authorization: 'Bearer ' + state.token });
+    if (options.body) headers['Content-Type'] = 'application/json';
+    const response = await fetch(path, Object.assign({}, options, { headers, cache: 'no-store' }));
+    if (response.status === 401) { state.who = null; renderWho(); }
+    return response;
+  }
+
+  async function apiJson(path, options) {
+    const response = await api(path, options);
+    let body = {};
+    try { body = await response.json(); } catch (e) { /* non-JSON */ }
+    if (!response.ok) throw new Error(body.message || body.error || ('HTTP ' + response.status));
+    return body;
+  }
+
+  function renderWho() {
+    $('who').textContent = state.who ? `${state.who.principal} (${state.who.role})` : 'Not signed in';
+    const can = (p) => !!state.who && state.who.permissions.includes(p);
+    $('annotate').hidden = !(can('annotate') && state.session);
+    $('review').hidden = !(can('review') && state.selected);
+  }
+
+  async function signIn() {
+    state.token = $('token').value.trim();
+    try { sessionStorage.setItem('ahpv_token', state.token); } catch (e) { /* ignore */ }
+    try {
+      state.who = await apiJson('/api/whoami');
+      message('');
+    } catch (e) {
+      state.who = null;
+      message('Sign-in failed: ' + e.message);
+    }
+    renderWho();
+    setMode(state.mode);
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    $('live').hidden = mode !== 'live';
+    $('sessions').hidden = mode !== 'sessions';
+    $('tab-live').setAttribute('aria-pressed', String(mode === 'live'));
+    $('tab-sessions').setAttribute('aria-pressed', String(mode === 'sessions'));
+    clearInterval(state.liveTimer);
+    clearInterval(state.statusTimer);
+    stopPlay();
+    if (!state.who) return;
+    if (mode === 'live') {
+      pollStatus().then(() => {
+        if (state.mode !== 'live') return;
+        if (lastStatus && lastStatus.mode === 'review_only') {
+          noFrame($('live-canvas'), 'REVIEW-ONLY SERVICE — no live camera');
+          info($('live-info'), [['Mode', 'review only: use Recorded sessions']]);
+          return;
+        }
+        state.liveTimer = setInterval(pollLiveFrame, 300);
+        state.statusTimer = setInterval(pollStatus, 1000);
+      });
+    } else {
+      loadSessions();
+    }
+  }
+
+  function info(element, rows) {
+    element.replaceChildren();
+    for (const [key, value] of rows) {
+      const dt = document.createElement('dt');
+      dt.textContent = key;
+      const dd = document.createElement('dd');
+      dd.textContent = value === null || value === undefined ? '—' : String(value);
+      element.append(dt, dd);
+    }
+  }
+
+  function noFrame(canvas, text) {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ff8a80';
+    ctx.font = '18px system-ui, sans-serif';
+    ctx.fillText(text, 16, 32);
+  }
+
+  let lastStatus = null;
+  async function pollStatus() {
+    try { lastStatus = await apiJson('/api/status'); } catch (e) { lastStatus = null; message('Status unavailable: ' + e.message); }
+  }
+
+  async function pollLiveFrame() {
+    if (state.liveBusy) return;
+    state.liveBusy = true;
+    const canvas = $('live-canvas');
+    try {
+      const response = await api('/api/live/frame.bmp');
+      if (response.ok) {
+        const bitmap = await createImageBitmap(await response.blob());
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+        info($('live-info'), [
+          ['State', lastStatus ? lastStatus.state : null],
+          ['Frame ID', response.headers.get('X-AHPV-Frame-Id')],
+          ['Acquired (wall)', response.headers.get('X-AHPV-Acquisition-Wall')],
+          ['Age at serve (ms)', response.headers.get('X-AHPV-Age-Ms')],
+          ['Flags', response.headers.get('X-AHPV-Flags')],
+          ['Display transform', response.headers.get('X-AHPV-Transform')],
+          ['Recording', lastStatus ? (lastStatus.current_session_id || 'off') + ' ' + (lastStatus.recording_note || '') : null],
+          ['Stored / dropped / rejected', lastStatus ? `${lastStatus.frames_stored} / ${lastStatus.frames_dropped_queue} / ${lastStatus.frames_rejected}` : null],
+        ]);
+      } else if (response.status === 404) {
+        clearInterval(state.liveTimer);
+        noFrame(canvas, 'REVIEW-ONLY SERVICE — no live camera');
+        info($('live-info'), [['Mode', 'review only: use Recorded sessions']]);
+      } else {
+        let body = {};
+        try { body = await response.json(); } catch (e) { /* ignore */ }
+        // The previous image is cleared: a stale frame must never look live.
+        noFrame(canvas, `NO CURRENT FRAME — ${body.state || response.status}`);
+        info($('live-info'), [['State', body.state || response.status], ['Detail', body.message || body.error]]);
+      }
+    } catch (e) {
+      noFrame(canvas, 'PREVIEW UNAVAILABLE');
+      message('Live preview error: ' + e.message);
+    } finally {
+      state.liveBusy = false;
+    }
+  }
+
+  async function loadSessions() {
+    try {
+      const body = await apiJson('/api/sessions');
+      const list = $('session-list');
+      list.replaceChildren();
+      for (const s of body.sessions.slice().reverse()) {
+        const li = document.createElement('li');
+        li.textContent = `${s.session_id} · ${s.status} · ${s.frames_stored ?? '?'} frames`;
+        li.tabIndex = 0;
+        li.setAttribute('aria-current', String(state.session === s.session_id));
+        li.addEventListener('click', () => openSession(s.session_id));
+        li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') openSession(s.session_id); });
+        list.append(li);
+      }
+      if (!body.sessions.length) list.textContent = 'No sessions recorded.';
+    } catch (e) {
+      message('Cannot list sessions: ' + e.message);
+    }
+  }
+
+  async function openSession(id) {
+    stopPlay();
+    state.session = id;
+    state.frames = [];
+    state.selected = null;
+    state.pending = null;
+    try {
+      let offset = 0;
+      for (;;) {
+        const page = await apiJson(`/api/sessions/${id}/frames?offset=${offset}&limit=5000`);
+        state.geometry = { width: page.width, height: page.height };
+        state.frames.push(...page.frames);
+        offset += page.frames.length;
+        if (!page.frames.length || offset >= page.total) break;
+      }
+      $('seek').max = Math.max(0, state.frames.length - 1);
+      await loadAnnotations();
+      await showFrame(0);
+      loadSessions();
+    } catch (e) {
+      message('Cannot open session: ' + e.message);
+    }
+    renderWho();
+  }
+
+  async function loadAnnotations() {
+    const body = await apiJson(`/api/sessions/${state.session}/annotations`);
+    state.annotations = body.annotations;
+    if (!body.chain_ok) message('Warning: the annotation log failed its integrity check.');
+  }
+
+  function currentFrame() { return state.frames[state.index]; }
+
+  async function showFrame(index) {
+    if (!state.frames.length) { noFrame($('replay-canvas'), 'NO STORED FRAMES'); return; }
+    state.index = Math.max(0, Math.min(index, state.frames.length - 1));
+    $('seek').value = state.index;
+    const frame = currentFrame();
+    const response = await api(`/api/sessions/${state.session}/frames/${frame.frame_id}.bmp`);
+    if (!response.ok) {
+      let body = {};
+      try { body = await response.json(); } catch (e) { /* ignore */ }
+      state.bitmap = null;
+      noFrame($('replay-canvas'), 'FRAME NOT DISPLAYED — ' + (body.message || response.status));
+    } else {
+      state.bitmap = await createImageBitmap(await response.blob());
+      state.scale = state.bitmap.width / state.geometry.width;
+    }
+    $('position').textContent = `${state.index + 1} / ${state.frames.length}`;
+    info($('frame-info'), [
+      ['Frame ID', frame.frame_id],
+      ['Source timestamp (ns)', frame.source_timestamp_ns],
+      ['Acquisition monotonic (ns)', frame.acquisition_mono_ns],
+      ['Acquisition wall (ns)', frame.acquisition_wall_ns],
+      ['Interval (ns)', frame.interval_ns],
+      ['Missing before', frame.missing_before],
+      ['Flags', frame.flags.join(', ') || 'none'],
+      ['CRC-32', frame.crc32],
+      ['Luma mean / std', `${frame.luma_mean} / ${frame.luma_std}`],
+      ['Display transform', response.headers.get('X-AHPV-Transform')],
+    ]);
+    renderAnnotations();
+    draw();
+  }
+
+  function frameAnnotations() {
+    const frame = currentFrame();
+    return frame ? state.annotations.filter((a) => a.frame_id === frame.frame_id) : [];
+  }
+
+  function draw() {
+    const canvas = $('replay-canvas');
+    if (!state.bitmap) return;
+    // Draw at display resolution so overlay lines and labels keep a readable size.
+    const ratio = window.devicePixelRatio || 1;
+    const cssWidth = canvas.clientWidth || state.bitmap.width;
+    canvas.width = Math.round(cssWidth * ratio);
+    canvas.height = Math.round(canvas.width * state.bitmap.height / state.bitmap.width);
+    state.k = canvas.width / state.geometry.width;  // source pixel -> canvas pixel
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(state.bitmap, 0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 2 * ratio;
+    ctx.font = `${12 * ratio}px system-ui, sans-serif`;
+    for (const a of frameAnnotations()) {
+      const [x, y, w, h] = a.region_xywh_pixels.map((v) => v * state.k);
+      ctx.strokeStyle = state.selected && state.selected.annotation_id === a.annotation_id ? '#00e5ff' : '#ffd600';
+      ctx.setLineDash([]);
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fillText(`${a.annotation_id.slice(0, 8)} r${a.revision} ${a.review_status}`, x + 2, Math.max(12 * ratio, y - 4 * ratio));
+    }
+    const p = state.drag || state.pending;
+    if (p) {
+      ctx.strokeStyle = '#ff40ff';
+      ctx.setLineDash([6 * ratio, 4 * ratio]);
+      ctx.strokeRect(p.x * state.k, p.y * state.k, p.w * state.k, p.h * state.k);
+    }
+  }
+
+  function renderAnnotations() {
+    const list = $('annotation-list');
+    list.replaceChildren();
+    for (const a of frameAnnotations()) {
+      const li = document.createElement('li');
+      li.setAttribute('aria-current', String(!!state.selected && state.selected.annotation_id === a.annotation_id));
+      const text = document.createElement('div');
+      text.textContent = `${a.annotation_id} · rev ${a.revision} · [${a.region_xywh_pixels.join(', ')}] · ${a.annotator_id} · ${a.review_status}` +
+        (a.reviewer_id ? ` by ${a.reviewer_id}` : '') + (a.notes ? ` · “${a.notes}”` : '');
+      li.append(text);
+      const select = document.createElement('button');
+      select.type = 'button';
+      select.textContent = 'Select';
+      select.addEventListener('click', () => { state.selected = a; $('notes').value = a.notes; renderWho(); renderAnnotations(); draw(); });
+      const history = document.createElement('button');
+      history.type = 'button';
+      history.textContent = 'History';
+      history.addEventListener('click', () => showHistory(a.annotation_id));
+      li.append(select, history);
+      if (state.who && state.who.permissions.includes('annotate')) {
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.textContent = 'Delete';
+        del.addEventListener('click', () => deleteAnnotation(a));
+        li.append(del);
+      }
+      list.append(li);
+    }
+    if (!list.children.length) list.textContent = 'None.';
+  }
+
+  async function showHistory(id) {
+    try {
+      const body = await apiJson(`/api/sessions/${state.session}/annotations/${id}/history`);
+      $('history').hidden = false;
+      $('history').textContent = JSON.stringify(body, null, 2);
+    } catch (e) { message('History unavailable: ' + e.message); }
+  }
+
+  function toSource(ev) {
+    const canvas = $('replay-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const x = (ev.clientX - rect.left) * (canvas.width / rect.width) / state.k;
+    const y = (ev.clientY - rect.top) * (canvas.height / rect.height) / state.k;
+    return {
+      x: Math.max(0, Math.min(state.geometry.width, Math.round(x))),
+      y: Math.max(0, Math.min(state.geometry.height, Math.round(y))),
+    };
+  }
+
+  function bindDrawing() {
+    const canvas = $('replay-canvas');
+    canvas.addEventListener('mousedown', (ev) => {
+      if (!state.bitmap || !state.who || !state.who.permissions.includes('annotate')) return;
+      const p = toSource(ev);
+      state.drag = { x0: p.x, y0: p.y, x: p.x, y: p.y, w: 0, h: 0 };
+    });
+    canvas.addEventListener('mousemove', (ev) => {
+      if (!state.drag) return;
+      const p = toSource(ev);
+      const d = state.drag;
+      d.x = Math.min(d.x0, p.x); d.y = Math.min(d.y0, p.y);
+      d.w = Math.abs(p.x - d.x0); d.h = Math.abs(p.y - d.y0);
+      draw();
+    });
+    window.addEventListener('mouseup', () => {
+      if (!state.drag) return;
+      const d = state.drag;
+      state.drag = null;
+      state.pending = d.w >= 1 && d.h >= 1 ? { x: d.x, y: d.y, w: d.w, h: d.h } : null;
+      $('pending').textContent = state.pending ? `Region [${state.pending.x}, ${state.pending.y}, ${state.pending.w}, ${state.pending.h}] (source pixels)` : 'No region drawn.';
+      draw();
+    });
+  }
+
+  async function writeAnnotation(path, method, body) {
+    try {
+      await apiJson(path, { method, body: JSON.stringify(body) });
+      state.pending = null;
+      $('pending').textContent = 'No region drawn.';
+      await loadAnnotations();
+      state.selected = state.selected ? state.annotations.find((a) => a.annotation_id === state.selected.annotation_id) || null : null;
+      message('');
+      renderWho();
+      renderAnnotations();
+      draw();
+    } catch (e) {
+      message('Annotation not saved: ' + e.message);
+    }
+  }
+
+  function saveNew() {
+    if (!state.pending) { message('Draw a region first.'); return; }
+    const p = state.pending;
+    writeAnnotation(`/api/sessions/${state.session}/annotations`, 'POST',
+      { frame_id: currentFrame().frame_id, region_xywh_pixels: [p.x, p.y, p.w, p.h], notes: $('notes').value });
+  }
+
+  function updateSelected() {
+    if (!state.selected) { message('Select an annotation first.'); return; }
+    const body = { expected_revision: state.selected.revision, notes: $('notes').value };
+    if (state.pending) body.region_xywh_pixels = [state.pending.x, state.pending.y, state.pending.w, state.pending.h];
+    writeAnnotation(`/api/sessions/${state.session}/annotations/${state.selected.annotation_id}`, 'PUT', body);
+  }
+
+  function deleteAnnotation(a) {
+    const reason = window.prompt('Reason for deleting this annotation (kept in the audit history):', '');
+    if (reason === null) return;
+    writeAnnotation(`/api/sessions/${state.session}/annotations/${a.annotation_id}/delete`, 'POST',
+      { expected_revision: a.revision, reason });
+  }
+
+  function submitReview() {
+    if (!state.selected) return;
+    writeAnnotation(`/api/sessions/${state.session}/annotations/${state.selected.annotation_id}/review`, 'POST',
+      { expected_revision: state.selected.revision, review_status: $('review-status').value, comment: $('review-comment').value });
+  }
+
+  function stopPlay() {
+    clearInterval(state.playTimer);
+    state.playTimer = null;
+    $('play').textContent = 'Play';
+  }
+
+  function togglePlay() {
+    if (state.playTimer) { stopPlay(); return; }
+    $('play').textContent = 'Pause';
+    let busy = false;
+    state.playTimer = setInterval(async () => {
+      if (busy) return;
+      if (state.index >= state.frames.length - 1) { stopPlay(); return; }
+      busy = true;
+      try { await showFrame(state.index + 1); } finally { busy = false; }
+    }, 150);
+  }
+
+  $('token').value = state.token;
+  $('signin').addEventListener('click', signIn);
+  $('token').addEventListener('keydown', (ev) => { if (ev.key === 'Enter') signIn(); });
+  $('tab-live').addEventListener('click', () => setMode('live'));
+  $('tab-sessions').addEventListener('click', () => setMode('sessions'));
+  $('refresh-sessions').addEventListener('click', loadSessions);
+  $('first').addEventListener('click', () => { stopPlay(); showFrame(0); });
+  $('prev').addEventListener('click', () => { stopPlay(); showFrame(state.index - 1); });
+  $('next').addEventListener('click', () => { stopPlay(); showFrame(state.index + 1); });
+  $('last').addEventListener('click', () => { stopPlay(); showFrame(state.frames.length - 1); });
+  $('play').addEventListener('click', togglePlay);
+  $('seek').addEventListener('change', (ev) => { stopPlay(); showFrame(Number(ev.target.value)); });
+  $('save-annotation').addEventListener('click', saveNew);
+  $('update-annotation').addEventListener('click', updateSelected);
+  $('clear-pending').addEventListener('click', () => { state.pending = null; $('pending').textContent = 'No region drawn.'; draw(); });
+  $('submit-review').addEventListener('click', submitReview);
+  bindDrawing();
+  window.addEventListener('resize', draw);
+  setMode('live');
+  if (state.token) signIn();
+})();

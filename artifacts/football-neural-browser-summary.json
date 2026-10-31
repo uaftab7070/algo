@@ -1,0 +1,14 @@
+{
+  "processed": 102,
+  "counts": {
+    "INITIALIZING": 1,
+    "TRACKING": 100,
+    "WEAK": 1
+  },
+  "meanFrameDeltaMs": 36.43875,
+  "maxFrameDeltaMs": 69.85699999999997,
+  "browserProcessingFps": 12,
+  "browserLatencyMs": 56.29999999701977,
+  "engine": "NanoTrack + LK",
+  "errors": []
+}

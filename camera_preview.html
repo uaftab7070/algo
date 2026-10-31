@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Visual Tracker · Live View</title>
+  <style>
+    :root { color-scheme:dark; font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#0a0d11; color:#ecf3f8; }
+    * { box-sizing:border-box; }
+    [hidden] { display:none !important; }
+    body { margin:0; padding:24px; }
+    main { max-width:1440px; margin:auto; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:18px; }
+    h1 { font-size:19px; letter-spacing:.03em; margin:0; }
+    .subtitle { color:#8798a6; margin:4px 0 0; }
+    .source-controls, .actions { display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    button, .file-button, select { border:1px solid #2d3e4c; border-radius:6px; background:#151e27; color:#edf4fa; font:inherit; padding:9px 14px; cursor:pointer; }
+    button.primary { background:#8deb70; color:#10200c; border-color:#8deb70; font-weight:650; }
+    button:disabled { opacity:.4; cursor:default; }
+    button:focus-visible, .file-button:focus-within, select:focus-visible { outline:2px solid #67d4ef; outline-offset:3px; }
+    select { max-width:200px; }
+    .file-button input { position:absolute; width:1px; height:1px; opacity:0; }
+    #stage { position:relative; border:1px solid #2b3944; border-radius:8px; background:#030609; overflow:hidden; }
+    canvas { display:block; width:100%; height:auto; cursor:crosshair; touch-action:none; }
+    #stage:fullscreen { display:grid; place-items:center; border:0; border-radius:0; background:#000; }
+    #stage:fullscreen canvas { width:100%; height:100%; object-fit:contain; }
+    #empty { position:absolute; inset:0; display:grid; place-content:center; text-align:center; pointer-events:none; color:#93a6b5; gap:8px; }
+    #empty[hidden] { display:none; }
+    #empty strong { color:#dbeaf4; font-size:20px; }
+    .footer { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-top:14px; }
+    .instructions { color:#9bb0bf; margin:14px 0 0; }
+    .key { color:#d8e9f4; font:12px ui-monospace,monospace; padding:2px 5px; background:#1b2630; border-radius:3px; }
+    #message { color:#a4bbca; min-height:22px; margin:8px 0 0; }
+    #message.error { color:#ff9d8f; }
+    .legend { color:#90a4b3; font-size:12px; }
+    .green { color:#91ef60; } .cyan { color:#59ceff; } .orange { color:#ffaf63; }
+    video { display:none; }
+    @media(max-width:760px) { body { padding:12px; } header { align-items:flex-start; flex-direction:column; } .source-controls { width:100%; } select { max-width:150px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1>VISUAL TRACKER</h1><p class="subtitle">Select one object. Follow its position, confidence and motion.</p></div>
+    <div class="source-controls">
+      <select id="camera" aria-label="Camera"><option value="">Default camera</option></select>
+      <button class="primary" id="start">Start camera</button>
+      <label class="file-button">Open video<input type="file" id="file" accept="video/*"></label>
+      <button id="sample" hidden>Football sample</button>
+      <button id="birds" hidden>Birds sample</button>
+    </div>
+  </header>
+  <div id="stage">
+    <video id="video" muted playsinline></video>
+    <canvas id="view" width="1280" height="720" aria-label="Video view. Drag a rectangle around a target to start tracking."></canvas>
+    <div id="empty"><strong>Ready to select a target</strong><span>Start your camera or open a video, then draw a box around the object.</span></div>
+  </div>
+  <div class="footer" id="timeline" hidden>
+    <input id="seek" type="range" min="0" max="1" value="0" step="0.001" aria-label="Video position" style="flex:1;accent-color:#8deb70">
+    <span id="timecode">0:00 / 0:00</span>
+  </div>
+  <div class="footer">
+    <div class="actions">
+      <button id="pause" disabled>Pause</button>
+      <button id="reset" disabled>Clear target</button>
+      <button id="fullscreen">Full screen</button>
+    </div>
+    <div class="legend"><span class="green">Target box</span> &nbsp; <span class="cyan">Confirmed motion trail</span> &nbsp; <span class="orange">Center-to-target line</span></div>
+  </div>
+  <p class="instructions">Drag a tight box around your target. <span class="key">Space</span> pause / resume &nbsp; <span class="key">R</span> clear target &nbsp; <span class="key">F</span> full screen</p>
+  <p id="message" role="status">Video stays on this laptop. Camera preview and local video files are processed here.</p>
+</main>
+<script src="native_tracker.js?v=precision3"></script>
+<script src="camera_preview.js?v=precision4"></script>
+</body>
+</html>

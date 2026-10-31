@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AL-HARAS Passive Vision</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<header class="notice" role="banner">
+  <strong>NOT FOR FLIGHT OR ENGAGEMENT CONTROL</strong>
+  <span>Passive observation, recording review and manual annotation only.</span>
+</header>
+<main>
+  <section class="bar">
+    <label>Access token <input id="token" type="password" autocomplete="off" spellcheck="false"></label>
+    <button id="signin" type="button">Sign in</button>
+    <span id="who" class="muted">Not signed in</span>
+    <nav>
+      <button id="tab-live" type="button" class="tab">Live preview</button>
+      <button id="tab-sessions" type="button" class="tab">Recorded sessions</button>
+    </nav>
+  </section>
+  <p id="message" class="message" role="status" aria-live="polite"></p>
+
+  <section id="live" class="panel" hidden>
+    <div class="viewer">
+      <canvas id="live-canvas" width="640" height="360" aria-label="Live camera preview (read-only)"></canvas>
+    </div>
+    <dl id="live-info" class="info"></dl>
+  </section>
+
+  <section id="sessions" class="panel" hidden>
+    <div class="columns">
+      <div class="list">
+        <h2>Sessions</h2>
+        <button id="refresh-sessions" type="button">Refresh</button>
+        <ul id="session-list"></ul>
+      </div>
+      <div class="review">
+        <div class="viewer">
+          <canvas id="replay-canvas" width="640" height="360" aria-label="Recorded frame"></canvas>
+        </div>
+        <div class="controls">
+          <button id="first" type="button" title="First frame">|&lt;</button>
+          <button id="prev" type="button" title="Previous frame">&lt;</button>
+          <button id="play" type="button">Play</button>
+          <button id="next" type="button" title="Next frame">&gt;</button>
+          <button id="last" type="button" title="Last frame">&gt;|</button>
+          <input id="seek" type="range" min="0" max="0" value="0" aria-label="Seek">
+          <span id="position" class="muted"></span>
+        </div>
+        <p class="muted">Replay steps through stored frames for review; it is not real-time playback. Missing frame IDs were dropped or rejected and are never shown.</p>
+        <dl id="frame-info" class="info"></dl>
+        <div id="annotate" class="annotate" hidden>
+          <h2>Manual region annotation</h2>
+          <p class="muted">Drag on the frame to mark a region. Annotations are review records only.</p>
+          <p id="pending" class="muted">No region drawn.</p>
+          <label>Notes <input id="notes" maxlength="500" autocomplete="off"></label>
+          <button id="save-annotation" type="button">Save new</button>
+          <button id="update-annotation" type="button">Update selected</button>
+          <button id="clear-pending" type="button">Clear</button>
+        </div>
+        <h2>Annotations on this frame</h2>
+        <ul id="annotation-list"></ul>
+        <div id="review" class="annotate" hidden>
+          <h2>Review selected annotation</h2>
+          <select id="review-status" aria-label="Review decision">
+            <option value="accepted">accepted</option>
+            <option value="needs_revision">needs_revision</option>
+            <option value="rejected">rejected</option>
+          </select>
+          <label>Comment <input id="review-comment" maxlength="500" autocomplete="off"></label>
+          <button id="submit-review" type="button">Submit review</button>
+        </div>
+        <pre id="history" class="history" hidden></pre>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

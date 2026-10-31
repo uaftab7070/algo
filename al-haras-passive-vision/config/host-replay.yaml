@@ -1,0 +1,18 @@
+# Workstation replay of a recorded or fixture Y4M file (deterministic, lossless).
+# NOT FOR FLIGHT OR ENGAGEMENT CONTROL.
+data_root: "./data"
+source:
+  kind: "y4m_file"
+  path: "tests/fixtures/generated/bench_motion.y4m"
+  realtime: "false"
+recording:
+  enabled: "true"
+storage:
+  warn_free_bytes: "268435456"
+  reserve_free_bytes: "67108864"
+preview:
+  enabled: "true"
+  bind_address: "127.0.0.1"
+  port: "8640"
+logging:
+  level: "info"

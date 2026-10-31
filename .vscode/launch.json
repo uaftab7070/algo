@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Laptop camera tracker preview",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/camera_preview.py",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}

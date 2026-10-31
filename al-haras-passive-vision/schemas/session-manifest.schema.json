@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ahpv/session-manifest/1.0",
+  "title": "AL-HARAS passive vision session manifest (session.json)",
+  "type": "object",
+  "required": ["schema_version", "usage_notice", "session_id", "run_id", "segment_index", "previous_session_id", "created_at",
+               "software", "platform", "clocks", "source", "configuration", "pipeline", "provenance", "fault_injection",
+               "recording", "status", "manifest_revision", "files", "manifest_written_at"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "usage_notice": {"const": "NOT FOR FLIGHT OR ENGAGEMENT CONTROL"},
+    "session_id": {"$ref": "#/$defs/session_id"},
+    "run_id": {"type": "string", "pattern": "^run-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$"},
+    "segment_index": {"type": "integer", "minimum": 0},
+    "previous_session_id": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/session_id"}]},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "software": {
+      "type": "object", "required": ["name", "version", "build_id", "executable_sha256"], "additionalProperties": false,
+      "properties": {"name": {"const": "al-haras-passive-vision"}, "version": {"type": "string"},
+                     "build_id": {"type": "string", "pattern": "^[0-9a-f]{16}$|^unrecorded$"},
+                     "executable_sha256": {"type": "string", "pattern": "^([0-9a-f]{64})?$"}}
+    },
+    "platform": {"type": "object", "required": ["os", "kernel_release", "machine", "is_target_hardware_verified"]},
+    "clocks": {
+      "type": "object", "required": ["ordering_clock", "dating_clock", "monotonic_at_creation_ns", "realtime_at_creation_ns"],
+      "properties": {"ordering_clock": {"const": "CLOCK_MONOTONIC"}, "dating_clock": {"const": "CLOCK_REALTIME"},
+                     "monotonic_at_creation_ns": {"type": "integer"}, "realtime_at_creation_ns": {"type": "integer"}}
+    },
+    "source": {
+      "type": "object",
+      "required": ["kind", "uri", "live", "content_origin", "width", "height", "pixel_format", "nominal_fps",
+                   "timestamp_basis", "transformations", "requested", "effective"],
+      "properties": {
+        "kind": {"enum": ["y4m_file", "y4m_stream", "v4l2"]},
+        "live": {"type": "boolean"},
+        "content_origin": {"enum": ["camera", "recorded_file", "synthetic_fixture", "unknown_stream"]},
+        "width": {"type": "integer", "minimum": 1, "maximum": 8192},
+        "height": {"type": "integer", "minimum": 1, "maximum": 8192},
+        "pixel_format": {"enum": ["gray8", "i420", "i444"]},
+        "nominal_fps": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2},
+        "timestamp_basis": {"type": "string", "minLength": 1},
+        "transformations": {"type": "array", "items": {"type": "string"}},
+        "requested": {"type": "object"},
+        "effective": {"type": "object"}
+      }
+    },
+    "configuration": {"type": "object", "required": ["text_sha256"]},
+    "pipeline": {"type": "object", "required": ["queue_capacity", "drop_policy", "overflow_policy"]},
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["owner", "permission_record", "place_category", "purpose", "dataset_partition", "scene_label"],
+      "properties": {"dataset_partition": {"enum": ["development", "acceptance"]}, "purpose": {"type": "string", "minLength": 1},
+                     "owner": {"type": "string"}, "permission_record": {"type": "string"}, "place_category": {"type": "string"},
+                     "scene_label": {"type": "string"}}
+    },
+    "fault_injection": {"type": ["null", "string"]},
+    "recording": {
+      "type": "object", "required": ["container", "pixel_format", "frame_bytes", "frame_checksum"],
+      "properties": {"container": {"const": "yuv4mpeg2"}, "frame_checksum": {"enum": ["crc32", "none"]}}
+    },
+    "status": {"enum": ["recording", "complete", "segment_complete", "camera_lost", "source_error", "stopped_storage", "error", "interrupted"]},
+    "manifest_revision": {"type": "integer", "minimum": 1},
+    "files": {"type": "object", "required": ["video", "frame_index", "events", "metrics", "annotations", "checksums"]},
+    "manifest_written_at": {"$ref": "#/$defs/timestamp"},
+    "stop_reason": {"type": ["null", "string"]},
+    "finalized_at": {"$ref": "#/$defs/timestamp"},
+    "statistics": {"type": "object", "required": ["frames_assigned", "frames_stored"]},
+    "checksums": {"type": "object", "additionalProperties": {"$ref": "#/$defs/file_checksum"}},
+    "recovery": {"type": "object", "required": ["recovered_at", "indexed_frames", "trailing_unindexed_bytes"]},
+    "finalization_error": {"type": "string"}
+  },
+  "$defs": {
+    "session_id": {"type": "string", "pattern": "^s-[0-9]{8}T[0-9]{6}Z-[0-9a-f]{8}$"},
+    "timestamp": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"},
+    "file_checksum": {"type": "object", "required": ["sha256", "size"], "additionalProperties": false,
+                      "properties": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "size": {"type": "integer", "minimum": 0}}}
+  }
+}

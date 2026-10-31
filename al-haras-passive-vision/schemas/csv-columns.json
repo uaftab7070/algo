@@ -1,0 +1,7 @@
+{
+  "frames.csv": ["frame_id", "source_epoch", "source_sequence", "acquisition_mono_ns", "acquisition_wall_ns", "source_timestamp_ns",
+                 "interval_ns", "missing_before", "size", "crc32", "luma_mean", "luma_std", "flags", "processing_ns"],
+  "summary.csv": ["metric", "value"],
+  "annotations.csv": ["annotation_id", "revision", "frame_id", "source_timestamp_ns", "x", "y", "width", "height", "annotator_id",
+                      "review_status", "reviewer_id", "deleted", "notes"]
+}

@@ -1,0 +1,3 @@
+{"event":"rejected_frame","at_mono_ns":99392142736000,"at":"2026-10-25T10:03:46.784Z","frame_id":19,"source_epoch":0,"reason":"fault injection: corrupted payload","source_sequence":20,"fault_injected":true}
+{"event":"end_of_stream","at_mono_ns":99392305485000,"at":"2026-10-25T10:03:46.946Z","message":"end of file after 90 frames"}
+{"event":"session_finalized","at_mono_ns":99392306060000,"at":"2026-10-25T10:03:46.947Z","status":"complete"}

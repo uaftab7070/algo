@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "audit_chain",
+      "ok": true,
+      "detail": "6 records chained and sealed"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+collected_utc: 20261025T100102Z
+host: Darwin apples-MacBook-Pro.local 22.6.0 Darwin Kernel Version 22.6.0: Tue Jul 15 08:22:28 PDT 2025; root:xnu-8796.141.3.713.2~2/RELEASE_X86_64 x86_64
+ProductName:		macOS
+ProductVersion:		13.7.8
+BuildVersion:		22H730
+compiler: Apple clang version 14.0.3 (clang-1403.0.22.14.1)
+python: Python 3.9.6
+node: v24.18.0
+target_hardware: NONE (development host; Luckfox Pico Max not attached)
+version: {"name":"al-haras-passive-vision","version":"0.1.0","build_id":"3d32c6249a1f5bd9","executable_sha256":"3189ca88ccd5917707973980dabbf333a1a5dae829300404cd1be23182cf1387","usage_notice":"NOT FOR FLIGHT OR ENGAGEMENT CONTROL"}
+binary_sha256: 3189ca88ccd5917707973980dabbf333a1a5dae829300404cd1be23182cf1387  build/host/ahpv

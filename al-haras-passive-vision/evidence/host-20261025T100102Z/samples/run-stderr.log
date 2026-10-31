@@ -1,0 +1,1 @@
+{"ts":"2026-10-25T10:03:46.784Z","mono_ns":99392142675000,"level":"warn","event_id":"CAP-020","software_version":"0.1.0","session_id":"s-20261025T100346Z-a1db3ecf","message":"corrupted frame rejected","details":{"frame_id":19,"reason":"fault injection: corrupted payload"}}

@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "qa_report_schema",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "csv_frames.csv",
+      "ok": true,
+      "detail": "900 rows"
+    },
+    {
+      "name": "csv_summary.csv",
+      "ok": true,
+      "detail": "78 rows"
+    },
+    {
+      "name": "csv_annotations.csv",
+      "ok": true,
+      "detail": "0 rows"
+    },
+    {
+      "name": "frames_csv_matches_report",
+      "ok": true,
+      "detail": "900 rows"
+    },
+    {
+      "name": "bundle_checksums",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+test_ac017_ac021_sigkill_then_recover (__main__.AbruptTermination) ... ok
+test_sigterm_finalizes_cleanly (__main__.AbruptTermination) ... ok
+test_startup_recovers_interrupted_sessions_automatically (__main__.AbruptTermination) ... ok
+test_ac003_disconnect_without_reopen_is_terminal_and_explicit (__main__.CameraLoss) ... ok
+test_fr016_reopen_marks_discontinuity (__main__.CameraLoss) ... ok
+test_ac019_unauthorized_configuration_changes_are_denied_and_audited (__main__.ConfigurationAndAuthorization) ... ok
+test_auth_file_permissions_are_enforced (__main__.ConfigurationAndAuthorization) ... ok
+test_nfr008_fr013_invalid_configuration_is_actionable (__main__.ConfigurationAndAuthorization) ... ok
+test_ac011_malformed_truncated_and_unsupported_inputs (__main__.CorruptInputs) ... ok
+test_fr008_drop_corrupt_delay_are_flagged_and_accounted (__main__.InjectedFrameFaults) ... ok
+test_memory_allocation_failure_stops_safely (__main__.InjectedFrameFaults) ... ok
+test_ac003_sec007_no_signal_and_loss_never_show_stale_frames (__main__.LiveStream) ... ok
+test_camera_absent_at_boot (__main__.LiveStream) ... ok
+test_frame_integrity_failure_is_not_displayed (__main__.PreviewApiSecurity) ... ok
+test_sec001_sec005_ac022_api_access_and_validation (__main__.PreviewApiSecurity) ... ok
+test_ac015_real_filesystem_exhaustion (__main__.StorageFaults)
+Uses a small macOS disk image so writes genuinely fail with ENOSPC. ... ok
+test_ac015_session_byte_limit (__main__.StorageFaults) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 31.974s
+
+OK

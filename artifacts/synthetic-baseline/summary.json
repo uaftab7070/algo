@@ -1,0 +1,125 @@
+{
+  "module": "/Users/apple/Documents/Tracking Algo/artifacts/baseline_precision_tracker.py",
+  "dataset": "deterministic textured rectangle, seed 20261023",
+  "note": "Synthetic diagnostic only. No claim of real-world or held-out accuracy. Initialization excluded. Rejected visible frames score zero.",
+  "evaluated_frames": 360,
+  "visible_frames": 318,
+  "visible_success_iou50": 0.8679245283018868,
+  "visible_success_iou75": 0.8584905660377359,
+  "visible_mean_iou": 0.8257598307866908,
+  "absent_false_accepts": 12,
+  "absent_frames": 42,
+  "frame_success_iou50_or_correct_absence": 0.85,
+  "cases": [
+    {
+      "case": "stationary",
+      "evaluated_frames": 36,
+      "visible_frames": 36,
+      "absent_frames": 0,
+      "accepted_visible_frames": 36,
+      "visible_success_iou50": 1.0,
+      "visible_success_iou75": 1.0,
+      "visible_mean_iou": 0.9529647972432724,
+      "visible_acceptance_rate": 1.0,
+      "absent_false_accepts": 0,
+      "mean_accepted_center_error_px": 1.2323542009720194,
+      "frame_success_iou50_or_correct_absence": 1.0,
+      "mean_core_ms": 14.515826888888878,
+      "states": {
+        "TRACKING": 36
+      }
+    },
+    {
+      "case": "translation",
+      "evaluated_frames": 60,
+      "visible_frames": 60,
+      "absent_frames": 0,
+      "accepted_visible_frames": 60,
+      "visible_success_iou50": 1.0,
+      "visible_success_iou75": 1.0,
+      "visible_mean_iou": 0.9593433783531521,
+      "visible_acceptance_rate": 1.0,
+      "absent_false_accepts": 0,
+      "mean_accepted_center_error_px": 1.0156289346621894,
+      "frame_success_iou50_or_correct_absence": 1.0,
+      "mean_core_ms": 14.53524180000001,
+      "states": {
+        "TRACKING": 60
+      }
+    },
+    {
+      "case": "fast_motion",
+      "evaluated_frames": 60,
+      "visible_frames": 60,
+      "absent_frames": 0,
+      "accepted_visible_frames": 60,
+      "visible_success_iou50": 1.0,
+      "visible_success_iou75": 1.0,
+      "visible_mean_iou": 0.9611559542649724,
+      "visible_acceptance_rate": 1.0,
+      "absent_false_accepts": 0,
+      "mean_accepted_center_error_px": 1.0765427640370488,
+      "frame_success_iou50_or_correct_absence": 1.0,
+      "mean_core_ms": 16.16587578333333,
+      "states": {
+        "TRACKING": 60
+      }
+    },
+    {
+      "case": "scale",
+      "evaluated_frames": 60,
+      "visible_frames": 60,
+      "absent_frames": 0,
+      "accepted_visible_frames": 60,
+      "visible_success_iou50": 1.0,
+      "visible_success_iou75": 1.0,
+      "visible_mean_iou": 0.9196888758514713,
+      "visible_acceptance_rate": 1.0,
+      "absent_false_accepts": 0,
+      "mean_accepted_center_error_px": 1.3168872711647528,
+      "frame_success_iou50_or_correct_absence": 1.0,
+      "mean_core_ms": 18.2890362,
+      "states": {
+        "TRACKING": 60
+      }
+    },
+    {
+      "case": "occlusion",
+      "evaluated_frames": 72,
+      "visible_frames": 42,
+      "absent_frames": 30,
+      "accepted_visible_frames": 19,
+      "visible_success_iou50": 0.4523809523809524,
+      "visible_success_iou75": 0.4523809523809524,
+      "visible_mean_iou": 0.431052905658681,
+      "visible_acceptance_rate": 0.4523809523809524,
+      "absent_false_accepts": 0,
+      "mean_accepted_center_error_px": 1.2716311689670081,
+      "frame_success_iou50_or_correct_absence": 0.6805555555555556,
+      "mean_core_ms": 13.407292236111159,
+      "states": {
+        "TRACKING": 19,
+        "WEAK": 8,
+        "LOST": 45
+      }
+    },
+    {
+      "case": "distractor",
+      "evaluated_frames": 72,
+      "visible_frames": 60,
+      "absent_frames": 12,
+      "accepted_visible_frames": 60,
+      "visible_success_iou50": 0.6833333333333333,
+      "visible_success_iou75": 0.6333333333333333,
+      "visible_mean_iou": 0.6628229823928253,
+      "visible_acceptance_rate": 1.0,
+      "absent_false_accepts": 12,
+      "mean_accepted_center_error_px": 36.5543572715072,
+      "frame_success_iou50_or_correct_absence": 0.5694444444444444,
+      "mean_core_ms": 15.046429902777813,
+      "states": {
+        "TRACKING": 72
+      }
+    }
+  ]
+}

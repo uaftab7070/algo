@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "manifest_schema",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "file_checksums",
+      "ok": true,
+      "detail": "4 files match"
+    },
+    {
+      "name": "frame_records_schema",
+      "ok": true,
+      "detail": "88 records"
+    },
+    {
+      "name": "frame_crc32",
+      "ok": true,
+      "detail": "0 payload CRC mismatches"
+    },
+    {
+      "name": "frame_accounting",
+      "ok": true,
+      "detail": "89 IDs accounted"
+    },
+    {
+      "name": "ids_strictly_increasing",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

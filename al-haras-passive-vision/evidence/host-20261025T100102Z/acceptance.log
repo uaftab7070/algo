@@ -1,0 +1,13 @@
+test_binary_imports_no_outbound_or_serial_symbols (__main__.BinaryAudit) ... ok
+test_sec003_only_declared_listener_and_no_device_handles (__main__.RuntimeAudit) ... ok
+test_sec002_no_embedded_credentials (__main__.SecretScan) ... ok
+test_audit_detects_planted_identifiers (__main__.SourceAudit) ... ok
+test_no_control_vocabulary_in_code (__main__.SourceAudit) ... ok
+test_no_serial_bus_or_outbound_network_apis (__main__.SourceAudit) ... ok
+test_only_annotation_writes_over_http (__main__.SourceAudit) ... ok
+test_v4l2_adapter_only_issues_capture_ioctls (__main__.SourceAudit) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 5.888s
+
+OK

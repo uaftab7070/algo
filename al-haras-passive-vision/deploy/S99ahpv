@@ -1,0 +1,63 @@
+#!/bin/sh
+# Buildroot SysV init script for the passive vision service (FR-001).
+# Outputs observation records only (NOT FOR FLIGHT OR ENGAGEMENT CONTROL).
+#
+# Verified facts on the Luckfox Pico Pro Max image (2026-10-25), see
+# evidence/device-20261025T090504Z/README.md:
+#  - the vendor app rkipc (started by /oem/usr/bin/RkLunch.sh) holds /dev/video11;
+#  - correct exposure/colour needs /oem/usr/bin/rkaiq_3A_server, which serves ONE
+#    stream session, so it is started fresh for every capture run here.
+# STATUS: start/stop logic not yet exercised as a boot script (AC-001 pending).
+# This script never stops rkipc itself. Disabling the vendor app at boot is an
+# explicit deployment decision (docs/operating-guide.md §10).
+#
+# Layout:
+#   /opt/ahpv/bin/ahpv          binary from the release package
+#   /etc/ahpv/config.yaml       configuration (UBIFS, 0644)
+#   /etc/ahpv/operator.token    0600, owned by $USER_NAME
+#   data_root on /mnt/sdcard    (vfat: recordings only; auth/audit stay on UBIFS)
+DAEMON=/opt/ahpv/bin/ahpv
+CONFIG=/etc/ahpv/config.yaml
+TOKEN=/etc/ahpv/operator.token
+USER_NAME=${AHPV_USER:-ahpv}       # Must exist and belong to group "video".
+PIDFILE=/var/run/ahpv.pid
+LOG=/mnt/sdcard/ahpv/console.log   # Writable by uid 1000 (vfat mount owner)
+AIQ=/oem/usr/bin/rkaiq_3A_server
+PURPOSE="${AHPV_PURPOSE:-unattended bench recording}"
+PARTITION="${AHPV_PARTITION:-development}"
+
+start() {
+    [ -x "$DAEMON" ] || { echo "ahpv: $DAEMON missing"; return 1; }
+    "$DAEMON" config check --config "$CONFIG" >/dev/null || { echo "ahpv: invalid configuration"; return 1; }
+    # RkLunch.sh loads the camera modules in the background; wait for the node.
+    i=0
+    while [ ! -e /dev/video11 ] && [ $i -lt 30 ]; do sleep 1; i=$((i + 1)); done
+    if pidof rkipc >/dev/null; then
+        echo "ahpv: vendor rkipc holds the camera; not starting (disable it explicitly first)"
+        return 1
+    fi
+    if [ -x "$AIQ" ]; then
+        killall rkaiq_3A_server 2>/dev/null
+        start-stop-daemon -S -b -x "$AIQ" -- --silent
+        sleep 1
+    fi
+    echo "ahpv: starting (readiness marker APP-001 in the structured log)"
+    start-stop-daemon -S -b -m -p "$PIDFILE" -c "$USER_NAME" -x /bin/sh -- -c \
+        "exec $DAEMON run --config $CONFIG --token-file $TOKEN --purpose '$PURPOSE' --partition $PARTITION >>$LOG 2>&1"
+}
+
+stop() {
+    echo "ahpv: stopping (SIGTERM finalizes the active session)"
+    start-stop-daemon -K -p "$PIDFILE" -s TERM 2>/dev/null
+    i=0
+    while [ -e "/proc/$(cat "$PIDFILE" 2>/dev/null)" ] && [ $i -lt 20 ]; do sleep 1; i=$((i + 1)); done
+    rm -f "$PIDFILE"
+    killall rkaiq_3A_server 2>/dev/null
+}
+
+case "$1" in
+    start) start ;;
+    stop) stop ;;
+    restart) stop; start ;;
+    *) echo "Usage: $0 {start|stop|restart}"; exit 1 ;;
+esac

@@ -1,0 +1,64 @@
+# AL-HARAS passive vision — example configuration for the Luckfox Pico Max.
+# NOT FOR FLIGHT OR ENGAGEMENT CONTROL. Observation, recording and review only.
+#
+# Values marked VERIFIED were measured on a Luckfox Pico Pro Max (Buildroot 2023.02.6,
+# MIS5001 module, 14.6 GB vfat microSD) on 2026-10-25; see
+# evidence/device-20261025T090504Z/README.md. Re-check after any image, sensor or card change.
+# Validate with: ahpv config check --config FILE
+data_root: "/mnt/sdcard/ahpv"      # VERIFIED: microSD (vfat); recordings only
+
+source:
+  kind: "v4l2"                     # Standard V4L2; needs /oem/usr/bin/rkaiq_3A_server running (deploy/S99ahpv)
+  path: "/dev/video11"             # VERIFIED: rkisp_mainpath
+  no_signal_timeout_ms: "2000"
+  auto_reopen: "false"             # false: a lost camera needs explicit operator action (NFR-007)
+  reopen_attempts: "3"
+  reopen_delay_ms: "1000"
+  v4l2:
+    width: "640"                   # VERIFIED envelope: 640x360 NV12 fits the measured 8.5-10.5 MB/s SD rate
+    height: "360"                  #   only with keep_every_n 2 (15 fps, 5.2 MB/s). 1280x720 drops ~74 %.
+    pixel_format: "NV12"           # VERIFIED: single-plane NV12, full range (no GREY on this ISP path)
+    fps: "0"                       # The driver reports no frame interval; the rate is measured
+    buffers: "4"
+
+pipeline:
+  queue_capacity: "32"             # VERIFIED: absorbs 1.7 s SD write stalls (high-water 25 of 32, ~11 MB)
+  drop_policy: "drop_oldest"
+  keep_every_n: "2"                # VERIFIED: 30 fps sensor -> 15 fps stored, declared in the manifest
+
+validation:
+  late_factor: "1.5"
+  very_dark_mean: "16"
+  very_bright_mean: "240"
+  low_contrast_std: "2.0"
+
+recording:
+  enabled: "true"
+  fsync_interval_frames: "15"
+  frame_checksum: "crc32"
+  max_session_bytes: "0"           # 0 = limited only by the storage reserve
+  segment_max_frames: "9000"       # 10 min at 15 fps per session segment (~3.1 GB)
+
+storage:
+  warn_free_bytes: "536870912"     # 512 MiB
+  reserve_free_bytes: "67108864"   # 64 MiB kept free so sessions can finalize
+
+preview:
+  enabled: "false"                 # Listener off unless needed (SEC-003); use SSH port forwarding to view
+  bind_address: "127.0.0.1"
+  port: "8640"
+  max_width: "640"
+
+metrics:
+  sample_interval_ms: "5000"
+
+security:
+  auth_file: "/etc/ahpv/auth.conf"     # UBIFS, mode 0600 (vfat cannot hold owner-only permissions)
+  audit_log: "/etc/ahpv/audit.jsonl"
+
+annotations:
+  require_independent_review: "true"
+
+logging:
+  file: "/mnt/sdcard/ahpv/ahpv.log"   # ~17 MB/day at info level; no rotation yet (D-17)
+  level: "info"

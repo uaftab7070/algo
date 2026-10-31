@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ahpv/frame-record/1.0",
+  "title": "One line of frames.jsonl",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["frame_id", "source_epoch", "source_sequence", "acquisition_mono_ns", "acquisition_wall_ns", "source_timestamp_ns",
+               "interval_ns", "missing_before", "offset", "size", "crc32", "luma_mean", "luma_std", "flags", "processing_ns"],
+  "properties": {
+    "frame_id": {"type": "integer", "minimum": 0},
+    "source_epoch": {"type": "integer", "minimum": 0},
+    "source_sequence": {"type": ["integer", "null"], "minimum": 0},
+    "acquisition_mono_ns": {"type": "integer"},
+    "acquisition_wall_ns": {"type": "integer"},
+    "source_timestamp_ns": {"type": "integer"},
+    "interval_ns": {"type": ["integer", "null"]},
+    "missing_before": {"type": "integer", "minimum": 0},
+    "offset": {"type": "integer", "minimum": 6},
+    "size": {"type": "integer", "minimum": 1},
+    "crc32": {"anyOf": [{"type": "null"}, {"type": "string", "pattern": "^[0-9a-f]{8}$"}]},
+    "luma_mean": {"type": "number", "minimum": 0, "maximum": 255},
+    "luma_std": {"type": "number", "minimum": 0},
+    "flags": {"type": "array", "items": {"enum": ["corrupted", "sequence_gap", "late", "timestamp_regression", "repeated_content",
+                                                   "low_contrast", "very_dark", "very_bright", "after_discontinuity",
+                                                   "after_no_signal", "fault_injected"]}},
+    "processing_ns": {"type": "integer", "minimum": 0}
+  }
+}
