@@ -1,0 +1,22 @@
+build/
+.venv/
+__pycache__/
+*.mp4
+*.avi
+*.mkv
+*.csv
+
+# Keep source documentation tables.
+!al-haras-passive-vision/docs/*.csv
+
+# Local settings, credentials, and macOS metadata.
+.DS_Store
+.env
+.env.*
+!.env.example
+*.token
+*.pem
+*.key
+.aws/
+.codex/
+.agents/
